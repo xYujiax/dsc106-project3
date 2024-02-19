@@ -60,6 +60,7 @@
 
 </script>
 
+<!-- slider -->
 <input type="range" id="yearSlider" min="1900" max="2022" value="1900" />
 
 <style>
@@ -76,4 +77,5 @@
   }
 </style>
 
+<!-- to change size of map -->
 <svg id="map" width="1200" height="800"></svg>
