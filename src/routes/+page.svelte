@@ -3,6 +3,5 @@
 </script>
 
 <main>
-  <h1>Coal Production by Country (1900-2022)</h1>
   <Map/>
 </main>
