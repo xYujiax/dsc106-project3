@@ -1,0 +1,19 @@
+﻿We opted for a map visualization that utilized a slider feature to provide an interactive timeline of coal production. Drawing inspiration from our experience in Lab 6, we employed geoNaturalEarth to create the map, offering a visually engaging representation. Using this map, we encoded coal production by country using a choropleth. Additionally, we encoded the year our data came from by using a slider feature. This allowed us to also interactively convey data changes over time.
+
+
+We also implemented a tooltip to allow users to gather information about each country by simply hovering over it. This additional layer of interactivity enhances the user experience and provides detailed insights. We also improved upon our hover feature so that it clearly differentiates the country hovered by slightly whitening out the rest of the map.
+
+
+In our quest for clarity and precision in data visualization, we intentionally aimed for a more restrained color palette (of 5 colors) to avoid potential confusion in gradient interpretation. To address the dominance of major coal-producing nations such as China and India, which significantly surpass others globally, we implemented a logarithmic scale for the data. This logarithmic transformation ensures that outliers, like these prominent contributors, have a more balanced impact on the overall visual representation, preventing them from overshadowing other regions. In the map, countries without available data are subtly shaded in gray, offering a clear visual distinction for areas with missing information.
+
+
+During the decision-making process, we explored alternatives, such as using an interactive line plot to depict each country's coal production trends over time. However, we concluded that the map visualization, with its spatial representation, was more compelling and captivating compared to a line plot. We also felt that interactive line plots might be too messy and chaotic for the purpose of our question.
+
+
+Our development process was characterized by collaboration and mutual support. In our initial meeting, lasting approximately two hours, we determined the question and outlined the visualization's design. Once the visualization type was decided, we assigned specific parts of the project to each team member, with a focus on implementing encodings. Team members proficient in certain aspects assisted those facing challenges, fostering a collaborative environment.
+
+
+The team collectively invested around 20 hours in developing the application. The most challenging aspect was ensuring seamless integration between the slider and choropleth map interactions. Syncing up these features required meticulous coordination and troubleshooting, highlighting the complexity of combining different interactive elements. 
+
+
+Our development process prioritized teamwork, and the challenges we faced enriched our learning experience. The result is a web page that effectively communicates changes in coal production over time in each country, guided by thoughtful design decisions and a collaborative development approach.
