@@ -40,8 +40,11 @@
       .style('opacity', 1);
 
     // choropleth color scale
-    let colorScale = d3.scaleSequential(d3.interpolateBlues);
-
+    /* am deleting this cuz we doing binned color scale */
+    //let colorScale = d3.scaleSequential(d3.interpolateBlues);
+    
+    const colorScale = d3.scaleQuantize(d3.schemeBlues[5]); // gets 5 colors from schemaBlues for binned colors
+  
     // map update function
     function updateMap(year) {
       const dataForYear = countriesData.filter(c => c.year === year);
@@ -52,13 +55,18 @@
 
       // replace 0 with minVal
       const adjustedProductionValues = productionValues.map(d => (d === 0 ? minValue : d));
+      console.log(adjustedProductionValues)
 
       // log scale add range to colors
       const logScale = d3.scaleLog()
         .domain([Math.max(minValue, d3.min(adjustedProductionValues)), d3.max(adjustedProductionValues)])
         .range([0, 1]);
+      
+      console.log(logScale.tickFormat(20, "$,f"))
 
-      colorScale.domain([0, 1]);
+      // Update color scale domain based on log-scaled values
+      //colorScale.domain([d3.min(adjustedProductionValues), d3.max(adjustedProductionValues)]);
+      //colorScale.domain([0, 1]);
 
       paths.each(function(d) {
         const countryName = d.properties.name;
@@ -74,8 +82,10 @@
           fillColor = coalProduction === 0 ? colorScale(0) : colorScale(logScale(coalProduction));
         }
         d3.select(this).attr('fill', fillColor);
+        console.log('colorScaleValue:', colorScale(logScale(coalProduction)));
       });
     }
+
 
     // call updateMap with current year
     updateMap(selectedYear);
@@ -85,12 +95,6 @@
       selectedYear = +event.target.value;
       updateMap(selectedYear);
     });
-
-    // save mouse position for tooltip
-    let recorded_mouse_position = {
-		x:0, y:0
-	  };
-
 
     // hover initiate
     paths.on('mousemove', function(event, d) {
@@ -123,11 +127,51 @@
         .duration(1)
         .style('opacity', 0); // hide tooltip
     });
+
+    // LEGEND
+    const legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", "translate(110, 210)"); 
+
+    // reverse color scale range cuz rn legend is upside-down default
+    const reversedColorRange = colorScale.range().reverse();
+
+    // color rectangles for legend
+    legend.selectAll("rect")
+        .data(reversedColorRange)
+        .enter().append("rect")
+        .attr("x", 0) // rectangles start at the same x-coordinate
+        .attr("y", (d, i) => i * 15) // spacing between rectangles
+        .attr("width", 10) // width of each rect
+        .attr("height", 10) // height
+        .attr("fill", d => d);
+
+    // text labels for legend
+    legend.selectAll("text")
+        .data(reversedColorRange)
+        .enter().append("text")
+        .attr("x", 15) // text positioning to the right of the rect
+        .attr("y", (d, i) => i * 15 + 8) // vert position
+        .attr("text-anchor", "start") // align to text-element strt
+        .text((d, i) => {
+            // show range corresponding to each color
+            const domain = colorScale.invertExtent(d);
+            return `${domain[0].toFixed(2)} - ${domain[1].toFixed(2)}`;
+        });
+
+    // legend title
+    legend.append("text")
+        .attr("x", 0)
+        .attr("y", -10) // Adjust the vertical position of the title
+        .attr("text-anchor", "start")
+        .style("font-weight", "bold")
+        .text("Coal Production (log-scaled)"); // Replace with your desired title
+
   });
 
 </script>
 
-<main>
+<!-- throwing html here. ik it's eggregious but too lazy to put in another doc -->
   <h1>Which countries wanna give you more lung cancer every year?</h1>
 
   <!-- slider -->
@@ -135,7 +179,7 @@
     <input type='range' id='yearSlider' min='1900' max='2022' value={selectedYear}/>
   </div>
   <div class="year-display">Year: {selectedYear}</div>
-</main>
+
 <!-- map size -->
 <svg id='map' viewBox='0 0 900 400'></svg>
 
@@ -158,23 +202,18 @@
         box-sizing: border-box;
     }
 
-    main {
-        width: 100%; 
-        height: 100%; 
-        overflow: hidden;
-        display: grid;
-        place-content: center;
-        text-align: center;
-        font-family: 'Nunito', sans-serif;
-        font-weight: 300;
-        line-height: 2;
-        font-size: 24px;
-        color: var(--color-text);
-    }
+    h1{
+      text-align: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: bold;
+      line-height: 2;
+      font-size: 48px;
+      color: var(--color-text);
+  }
 
   .slider-container {
     text-align: center;
-    width: 50%;
+    width: 55%;
     margin: 20px auto;
   }
 
@@ -187,6 +226,7 @@
     text-align: center;
     font-size: 32px;
     margin: 10px auto 20px auto;
+    font-family: 'Nunito', sans-serif;
   }
 
   #map { 
@@ -207,6 +247,17 @@
     line-height: 1.4; /* line spacing for better readability */
     color: #333; /* and a darker text color for contrast */
   }
+
+:global(.legend rect) {
+    width: px; /* Adjust the width of the rectangles */
+    height: px; /* Adjust the height of the rectangles */
+}
+
+:global(.legend text) {
+  font-family: 'Nunito', sans-serif; /* Adjust the font size of the text */
+  font-size: 9px; 
+}
+
 
 </style>
 
