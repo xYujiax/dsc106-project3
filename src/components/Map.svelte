@@ -183,6 +183,8 @@
 <!-- map size -->
 <svg id='map' viewBox='0 0 900 400'></svg>
 
+<a href="https://raw.githubusercontent.com/xYujiax/dsc106-project3/main/%20Writeup.txt">Write-up</a>
+
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
